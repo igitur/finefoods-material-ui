@@ -1,89 +1,46 @@
-import type { AuthProvider } from "@refinedev/core";
-import { disableAutoLogin, enableAutoLogin } from "./hooks";
+import { LegacyAuthProvider as AuthProvider, useLogout } from "@refinedev/core";
+import { AuthHelper } from "@tspvivek/refine-directus";
+import { directusClient } from "./directusClient";
 
-export const TOKEN_KEY = "refine-auth";
+const directusAuthHelper = AuthHelper(directusClient);
 
-export const authProvider: AuthProvider = {
+const authProvider: AuthProvider = {
   login: async ({ email, password }) => {
-    enableAutoLogin();
-    localStorage.setItem(TOKEN_KEY, `${email}-${password}`);
-    return {
-      success: true,
-      redirectTo: "/",
-    };
-  },
-  register: async ({ email, password }) => {
-    try {
-      await authProvider.login({ email, password });
-      return {
-        success: true,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: {
-          message: "Register failed",
-          name: "Invalid email or password",
-        },
-      };
+    const { access_token } = await directusAuthHelper.login(email, password);
+    if (access_token) {
+      return Promise.resolve();
+    } else {
+      return Promise.reject();
     }
-  },
-  updatePassword: async (params) => {
-    return {
-      success: true,
-    };
-  },
-  forgotPassword: async () => {
-    return {
-      success: true,
-    };
+    // return access_token ? Promise.resolve("/posts") : Promise.reject();
   },
   logout: async () => {
-    disableAutoLogin();
-    localStorage.removeItem(TOKEN_KEY);
-    return {
-      success: true,
-      redirectTo: "/login",
-    };
+    directusAuthHelper.logout();
+    await Promise.resolve();
   },
-  onError: async (error) => {
-    if (error.response?.status === 401) {
-      return {
-        logout: true,
-      };
-    }
 
-    return { error };
+  checkError: () => {
+    return Promise.resolve();
   },
-  check: async () => {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (token) {
-      return {
-        authenticated: true,
-      };
-    }
 
-    return {
-      authenticated: false,
-      error: {
-        message: "Check failed",
-        name: "Token not found",
-      },
-      logout: true,
-      redirectTo: "/login",
-    };
+  checkAuth: async () => {
+    if (directusAuthHelper.getToken()) {
+      return Promise.resolve();
+    } else {
+      //return Promise.reject();
+    }
   },
-  getPermissions: async () => null,
-  getIdentity: async () => {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (!token) {
-      return null;
-    }
+  getPermissions: () => Promise.resolve(),
 
-    return {
-      id: 1,
-      name: "James Sullivan",
-      avatar: "https://i.pravatar.cc/150",
-    };
+  getUserIdentity: async () => {
+    try {
+      const data = await directusAuthHelper.me({ fields: ["*.*"] });
+      return Promise.resolve(data);
+    } catch (e) {
+      window.location.href = "/login";
+      return Promise.reject();
+    }
   },
 };
+
+export default authProvider;

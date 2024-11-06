@@ -38,6 +38,7 @@
     "@refinedev/react-table": "^5.6.13",
     "@refinedev/simple-rest": "^5.0.8",
     "@tanstack/react-table": "^8.2.6",
+    "@tspvivek/refine-directus": "^1.0.38",
     "@uiw/react-md-editor": "^3.19.5",
     "axios": "^1.6.2",
     "dayjs": "^1.10.7",

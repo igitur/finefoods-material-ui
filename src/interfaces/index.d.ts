@@ -89,6 +89,17 @@ export interface IOrder {
   amount: number;
 }
 
+export interface IClub {
+  id: string;
+  status: string;
+  user_created: string;
+  date_created: string;
+  user_updated: string;
+  date_updated: string;
+  name: string;
+  logo: string;
+}
+
 export interface IProduct {
   id: number;
   name: string;

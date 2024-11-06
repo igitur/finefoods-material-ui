@@ -8,7 +8,7 @@ import {
 } from "@refinedev/mui";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import CssBaseline from "@mui/material/CssBaseline";
-import dataProvider from "@refinedev/simple-rest";
+// import dataProvider from "@refinedev/simple-rest";
 import routerProvider, {
   CatchAllNavigate,
   NavigateToResource,
@@ -20,12 +20,16 @@ import { useTranslation } from "react-i18next";
 import MopedOutlined from "@mui/icons-material/MopedOutlined";
 import Dashboard from "@mui/icons-material/Dashboard";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
+import GroupsIcon from "@mui/icons-material/Groups";
+import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
+import EventIcon from "@mui/icons-material/Event";
+import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import FastfoodOutlinedIcon from "@mui/icons-material/FastfoodOutlined";
 import LabelOutlinedIcon from "@mui/icons-material/LabelOutlined";
 import StoreOutlinedIcon from "@mui/icons-material/StoreOutlined";
 import Box from "@mui/material/Box";
-import { authProvider } from "./authProvider";
+import authProvider from "./authProvider";
 import { DashboardPage } from "./pages/dashboard";
 import { OrderList, OrderShow } from "./pages/orders";
 import { CustomerShow, CustomerList } from "./pages/customers";
@@ -37,6 +41,8 @@ import { CategoryList } from "./pages/categories";
 import { ColorModeContextProvider } from "./contexts";
 import { Header, Title } from "./components";
 import { useAutoLoginForDemo } from "./hooks";
+import { directusClient } from "./directusClient";
+import { dataProvider } from "@tspvivek/refine-directus";
 
 const API_URL = "https://api.finefoods.refine.dev";
 
@@ -65,8 +71,8 @@ const App: React.FC = () => {
           <RefineSnackbarProvider>
             <Refine
               routerProvider={routerProvider}
-              dataProvider={dataProvider(API_URL)}
-              authProvider={authProvider}
+              dataProvider={dataProvider(directusClient)}
+              legacyAuthProvider={authProvider}
               i18nProvider={i18nProvider}
               options={{
                 syncWithLocation: true,
@@ -85,11 +91,11 @@ const App: React.FC = () => {
                   },
                 },
                 {
-                  name: "orders",
-                  list: "/orders",
-                  show: "/orders/:id",
+                  name: "Club",
+                  list: "/clubs",
+                  show: "/clubs/:id",
                   meta: {
-                    icon: <ShoppingBagOutlinedIcon />,
+                    icon: <GroupsIcon />,
                   },
                 },
                 {
@@ -101,38 +107,29 @@ const App: React.FC = () => {
                   },
                 },
                 {
-                  name: "products",
-                  list: "/products",
-                  create: "/products/new",
-                  edit: "/products/:id/edit",
-                  show: "/products/:id",
+                  name: "runners",
+                  list: "/runners",
+                  create: "/runners/new",
+                  edit: "/runners/:id/edit",
+                  show: "/runners/:id",
                   meta: {
-                    icon: <FastfoodOutlinedIcon />,
+                    icon: <DirectionsRunIcon />,
                   },
                 },
                 {
-                  name: "categories",
-                  list: "/categories",
+                  name: "races",
+                  list: "/races",
                   meta: {
-                    icon: <LabelOutlinedIcon />,
+                    icon: <EventIcon />,
                   },
                 },
                 {
-                  name: "stores",
-                  list: "/stores",
-                  create: "/stores/new",
-                  edit: "/stores/:id/edit",
+                  name: "entries",
+                  list: "/entries",
+                  create: "/entries/new",
+                  edit: "/entries/:id/edit",
                   meta: {
-                    icon: <StoreOutlinedIcon />,
-                  },
-                },
-                {
-                  name: "couriers",
-                  list: "/couriers",
-                  create: "/couriers/new",
-                  edit: "/couriers/:id/edit",
-                  meta: {
-                    icon: <MopedOutlined />,
+                    icon: <BookOnlineIcon />,
                   },
                 },
               ]}
@@ -160,12 +157,12 @@ const App: React.FC = () => {
                 >
                   <Route index element={<DashboardPage />} />
 
-                  <Route path="/orders">
+                  <Route path="/clubs">
                     <Route index element={<OrderList />} />
-                    <Route path=":id" element={<OrderShow />} />
+                    {/* <Route path=":id" element={<OrderShow />} /> */}
                   </Route>
                   <Route
-                    path="/customers"
+                    path="/clubs"
                     element={
                       <CustomerList>
                         <Outlet />
@@ -225,8 +222,8 @@ const App: React.FC = () => {
                         type="login"
                         formProps={{
                           defaultValues: {
-                            email: "demo@refine.dev",
-                            password: "demodemo",
+                            email: "igitur@gmail.com",
+                            password: "frugosan34",
                           },
                         }}
                       />
@@ -239,8 +236,8 @@ const App: React.FC = () => {
                         type="register"
                         formProps={{
                           defaultValues: {
-                            email: "demo@refine.dev",
-                            password: "demodemo",
+                            email: "igitur@gmail.com",
+                            password: "frugosan34",
                           },
                         }}
                       />

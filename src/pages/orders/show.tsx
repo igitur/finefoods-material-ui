@@ -32,7 +32,7 @@ export const OrderShow = () => {
     record?.status.text === "On The Way";
 
   const { mutate } = useUpdate({
-    resource: "orders",
+    resource: "__clubs",
     id: record?.id.toString(),
   });
 

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { authProvider } from "../../authProvider";
+import authProvider from "../../authProvider";
+// import { authProvider } from "../../authProvider";
 
 /**
  * This hook is used to automatically login the user.
@@ -11,8 +12,8 @@ export const useAutoLoginForDemo = () => {
   const login = useCallback(async () => {
     try {
       await authProvider.login({
-        email: "demo@refine.dev",
-        password: "demodemo",
+        email: "igitur@gmail.com",
+        password: "frugosan34",
       });
     } catch (_error) {
     } finally {
